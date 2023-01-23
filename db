@@ -1,0 +1,30 @@
+CREATE TABLE `users` (
+  `username` text NOT NULL,
+  `id` text NOT NULL,
+  `email` text NOT NULL,
+  `password` NOT NULL,
+  `trm_date` NOT NULL
+) ENGINE= mariadb DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table 
+--
+
+INSERT INTO `user_details` (`id`, `username`, `email`, `password`) VALUES
+(123,'Poojasr','poojasr@bmsce.ac.in, 'Pooj62'),
+(256, 'Roshni','roshni@bmsce.ac.in, 'Rosh12),
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user__details`
+--
+
+CREATE TABLE `user__details` (
+  `username` text NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(6) NOT NULL,
+  `cont_num` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
