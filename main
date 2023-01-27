@@ -1,0 +1,33 @@
+"""# Main Work For Encryption"""
+
+myText = "Two One Nine Two"
+myKey1 = "Thats my Kung Fu"
+
+keyLen = len(myKey1)
+textLen = len(myText)
+
+if keyLen > 16:
+print("Key Length Is Exceed 128 Bits")
+
+else:
+#start assigning key in matrix from 0 to 15
+listText = []
+cn = 0
+temp = ""
+for i in range(textLen):
+temp += myText[i]
+cn +=1
+if cn == 16 or i == textLen-1:
+listText.append(temp)
+temp = ""
+cn = 0
+
+#print key 10 and main cipher text
+for x in listText:
+t_matrix, k_matrix = encryptData(x, myKey1, 10)
+print(f"Text = [{x}] ---------------------------T/K")
+print()
+printMatrix(t_matrix, 4, 4)
+print()
+printMatrix(k_matrix, 4, 4)
+print("\n\n")
