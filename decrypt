@@ -1,0 +1,19 @@
+#decryption process output
+
+enText = [
+["73", "1c", "09", "13"],
+["54", "6e", "4a", "54"],
+["c1", "6e", "02", "50"],
+["21", "20", "65", "6f"]
+]
+
+enKey = [
+["20", "67", "54", "73"],
+["68", "20", "4b", "20"],
+["26", "10", "19", "34"],
+["7d", "79", "6e", "75"]
+]
+#11th round execution
+
+dt_matrix, dk_matrix, actualText = decryptData(t_matrix, k_matrix, 11)
+print(actualText)
