@@ -1,0 +1,303 @@
+Sbox = [
+["63", "7C", "77", "7B", "F2", "6B", "6F", "C5", "30", "01", "67", "2B", "FE", "D7", "AB", "76"],
+["CA", "82", "C9", "7D", "FA", "59", "47", "F0", "AD", "D4", "A2", "AF", "9C", "A4", "72", "C0"],
+["B7", "FD", "93", "26", "36", "3F", "F7", "CC", "34", "A5", "E5", "F1", "71", "D8", "31", "15"],
+["04", "C7", "23", "C3", "18", "96", "05", "9A", "07", "12", "80", "E2", "EB", "27", "B2", "75"],
+["09", "83", "2C", "1A", "1B", "6E", "5A", "A0", "52", "3B", "D6", "B3", "29", "E3", "2F", "84"],
+["53", "D1", "00", "ED", "20", "FC", "B1", "5B", "6A", "CB", "BE", "39", "4A", "4C", "58", "CF"],
+["D0", "EF", "AA", "FB", "43", "4D", "33", "85", "45", "F9", "02", "7F", "50", "3C", "9F", "A8"],
+["51", "A3", "40", "8F", "92", "9D", "38", "F5", "BC", "B6", "DA", "21", "10", "FF", "F3", "D2"],
+["CD", "0C", "13", "EC", "5F", "97", "44", "17", "C4", "A7", "7E", "3D", "64", "5D", "19", "73"],
+["60", "81", "4F", "DC", "22", "2A", "90", "88", "46", "EE", "B8", "14", "DE", "5E", "0B", "DB"],
+["E0", "32", "3A", "0A", "49", "06", "24", "5C", "C2", "D3", "AC", "62", "91", "95", "E4", "79"],
+["E7", "C8", "37", "6D", "8D", "D5", "4E", "A9", "6C", "56", "F4", "EA", "65", "7A", "AE", "08"],
+["BA", "78", "25", "2E", "1C", "A6", "B4", "C6", "E8", "DD", "74", "1F", "4B", "BD", "8B", "8A"],
+["70", "3E", "B5", "66", "48", "03", "F6", "0E", "61", "35", "57", "B9", "86", "C1", "1D", "9E"],
+["E1", "F8", "98", "11", "69", "D9", "8E", "94", "9B", "1E", "87", "E9", "CE", "55", "28", "DF"],
+["8C", "A1", "89", "0D", "BF", "E6", "42", "68", "41", "99", "2D", "0F", "B0", "54", "BB", "16"]
+]
+
+Sbox_inv = [
+["52", "09", "6A", "D5", "30", "36", "A5", "38", "BF", "40", "A3", "9E", "81", "F3", "D7", "FB"],
+["7C", "E3", "39", "82", "9B", "2F", "FF", "87", "34", "8E", "43", "44", "C4", "DE", "E9", "CB"],
+["54", "7B", "94", "32", "A6", "C2", "23", "3D", "EE", "4C", "95", "0B", "42", "FA", "C3", "4E"],
+["08", "2E", "A1", "66", "28", "D9", "24", "B2", "76", "5B", "A2", "49", "6D", "8B", "D1", "25"],
+["72", "F8", "F6", "64", "86", "68", "98", "16", "D4", "A4", "5C", "CC", "5D", "65", "B6", "92"],
+["6C", "70", "48", "50", "FD", "ED", "B9", "DA", "5E", "15", "46", "57", "A7", "8D", "9D", "84"],
+["90", "D8", "AB", "00", "8C", "BC", "D3", "0A", "F7", "E4", "58", "05", "B8", "B3", "45", "06"],
+["D0", "2C", "1E", "8F", "CA", "3F", "0F", "02", "C1", "AF", "BD", "03", "01", "13", "8A", "6B"],
+["3A", "91", "11", "41", "4F", "67", "DC", "EA", "97", "F2", "CF", "CE", "F0", "B4", "E6", "73"],
+["96", "AC", "74", "22", "E7", "AD", "35", "85", "E2", "F9", "37", "E8", "1C", "75", "DF", "6E"],
+["47", "F1", "1A", "71", "1D", "29", "C5", "89", "6F", "B7", "62", "0E", "AA", "18", "BE", "1B"],
+["FC", "56", "3E", "4B", "C6", "D2", "79", "20", "9A", "DB", "C0", "FE", "78", "CD", "5A", "F4"],
+["1F", "DD", "A8", "33", "88", "07", "C7", "31", "B1", "12", "10", "59", "27", "80", "EC", "5F"],
+["60", "51", "7F", "A9", "19", "B5", "4A", "0D", "2D", "E5", "7A", "9F", "93", "C9", "9C", "EF"],
+["A0", "E0", "3B", "4D", "AE", "2A", "F5", "B0", "C8", "EB", "BB", "3C", "83", "53", "99", "61"],
+["17", "2B", "04", "7E", "BA", "77", "D6", "26", "E1", "69", "14", "63", "55", "21", "0C", "7D"]
+]
+
+rows, cols = 4, 4
+
+"""# Encryption"""
+
+def text2hex(s):
+s = s.encode('utf-8')
+return s.hex()
+
+def hex2text(h):
+return bytes.fromhex(h).decode('utf-8')
+
+#make a matrix with 00 in the blocks as an initial matrix 
+
+def get2dMatrix(rows, cols):
+Matrix = [[0 for x in range(cols)] for y in range(rows)]
+return Matrix
+#hex values to assign in matrix each block 2 hex value
+def hexToMatrixAssign(my_matrix, my_hex):
+th = my_hex
+lenth = len(th)
+cnt = 0
+for i in range(rows):
+for j in range(cols):
+if cnt >= lenth:
+my_matrix[j][i] = "00"
+cnt +=2
+else:
+my_matrix[j][i] = th[cnt]+th[cnt+1]
+# print(f"{j}{i} = {th[cnt]+th[cnt+1]}")
+cnt +=2
+return my_matrix
+
+
+def printMatrix(my_matrix, rows, cols):
+for i in range(rows):
+for j in range(cols):
+print(f"{my_matrix[i][j]} ",end = '')
+print()
+
+def hex2Binary(hexadecimal):
+# hexadecimal = "54776f20"
+end_length = len(hexadecimal) * 4
+
+hex_as_int = int(hexadecimal, 16)
+hex_as_binary = bin(hex_as_int)
+padded_binary = hex_as_binary[2:].zfill(end_length)
+return padded_binary
+
+def binary2Hex(binary_no):
+return hex(int(binary_no, 2)).replace("0x","")
+
+def _Xor(a, b):
+a = hex2Binary(a)
+b = hex2Binary(b)
+y = int(a,2) ^ int(b,2)
+y = '{0:b}'.format(y)
+y = binary2Hex(str(y))
+if len(y) == 1:
+y = "0"+y
+return y
+
+def xorIn2matrix(matrix_1, matrix_2, rows, cols):
+n_matrix = get2dMatrix(rows, cols)
+for i in range(rows):
+for j in range(cols):
+n_matrix[i][j] = _Xor(matrix_1[i][j], matrix_2[i][j])
+
+return n_matrix
+
+def _1shift(my_matrix, rows, cols):
+temp = my_matrix[0][0]
+for i in range(cols):
+my_matrix[0][i] = my_matrix[0][i+1]
+if i+2 == cols:
+break
+
+my_matrix[0][cols-1] = temp
+return my_matrix
+
+def _2shift(my_matrix, rows, cols):
+temp = my_matrix[1][0]
+temp1 = my_matrix[1][1]
+for i in range(cols):
+my_matrix[1][i] = my_matrix[1][i+2]
+if i+3 == cols:
+break
+
+my_matrix[1][cols-1] = temp1
+my_matrix[1][cols-2] = temp
+return my_matrix
+
+def getFromSbox(x):
+a = 0
+b = 0
+if ord(x[0]) >= 48 and ord(x[0]) <= 75:
+a = ord(x[0]) -48
+elif ord(x[0]) >= 97 and ord(x[0]) <= 122:
+a = ord(x[0]) -87
+else:
+a = int(x[0])
+
+if ord(x[1]) >= 48 and ord(x[1]) <= 57:
+b = ord(x[1]) -48
+elif ord(x[1]) >= 97 and ord(x[1]) <= 122:
+b = ord(x[1]) -87
+else:
+b = int(x[1])
+
+
+return Sbox[a][b].lower()
+
+# 3rd row s-box implementation
+def _3sbox(my_matrix, rows, cols):
+for i in range(cols):
+my_matrix[2][i] = getFromSbox(my_matrix[2][i])
+return my_matrix
+
+#last row execution
+def _4addbit(my_matrix, rows, cols):
+temp = my_matrix[3][0]
+temp = hex2Binary(temp)
+temp = bin(int(temp,2) + int("01",2)).replace("0b","")
+temp = binary2Hex(temp)
+my_matrix[3][0] = temp
+return my_matrix
+
+
+def encryptData(myText, myKey1, no_round):
+#plain text
+t_matrix = 0
+#key
+k_matrix = 0
+
+th = text2hex(myText)
+kh = text2hex(myKey1)
+
+rows, cols = 4, 4
+
+# cols = getNoOfColumn(len(myText), len(myKey1))
+
+cipherText = get2dMatrix(rows, cols)
+cipherText = hexToMatrixAssign(cipherText, th)
+# printMatrix(cipherText, rows, cols)
+
+cipherKey = get2dMatrix(rows, cols)
+cipherKey = hexToMatrixAssign(cipherKey, kh)
+# printMatrix(cipherKey, rows, cols)
+
+printMatrix(cipherText, 4, 4)
+print("")
+printMatrix(cipherKey, 4, 4)
+print("")
+roundCount = 0
+#total 11 rounds
+for i in range(no_round+1):
+t_matrix = xorIn2matrix(cipherText, cipherKey, rows, cols)
+if i <=9:
+k_matrix = _1shift(cipherKey, rows, cols)
+k_matrix = _2shift(cipherKey, rows, cols)
+k_matrix = _3sbox(cipherKey, rows, cols)
+if i < 9:
+k_matrix = _4addbit(cipherKey, rows, cols)
+
+#_________________________________________________________
+roundCount +=1
+print(f"#Round {roundCount}")
+print("---------------------------")
+printMatrix(t_matrix, 4, 4)
+print()
+printMatrix(k_matrix, 4, 4)
+print("\n\n")
+#_________________________________________________________
+
+cipherText = t_matrix
+cipherKey = k_matrix
+
+
+return t_matrix, k_matrix
+
+
+
+"""# Decryption"""
+
+def HexMatrixToText(my_matrix, rows, cols):
+mystr = ""
+for i in range(rows):
+for j in range(cols):
+mystr += my_matrix[j][i]
+
+return hex2text(mystr)
+
+
+def decryptData(t_matrix, k_matrix, no_round):
+roundCount = no_round+1
+kpo = ""
+for i in range(no_round):
+#key 10 will remain the same
+if i > 0:
+#changes after that
+if i > 1:
+kpo = d_4addbit(k_matrix, rows, cols)
+
+kpo = d_3sbox(k_matrix, rows, cols)
+kpo = _2shift(k_matrix, rows, cols)
+for i in range(3):
+kpo = _1shift(k_matrix, rows, cols)
+else:
+kpo = k_matrix
+
+# tpo = xorIn2matrix(kpo, t_matrix, rows, cols)
+tpo = xorIn2matrix(kpo, t_matrix, 4, 4)
+
+
+# roundCount -=1
+# print(f"#Round {roundCount}")
+# print("---------------------------")
+# printMatrix(tpo, 4, 4)
+# print()
+# printMatrix(kpo, 4, 4)
+# print("\n\n")
+
+k_matrix = kpo
+t_matrix = tpo
+
+actualText = HexMatrixToText(t_matrix, rows, cols)
+return t_matrix, k_matrix, actualText.replace("\x00", "")
+
+
+#4th row subtraction
+def d_4addbit(my_matrix, rows, cols):
+temp = my_matrix[3][0]
+temp = hex2Binary(temp)
+temp = bin(int(temp,2) - int("01",2)).replace("0b","")
+temp = binary2Hex(temp)
+my_matrix[3][0] = temp
+return my_matrix
+
+
+
+#inverse s-box define
+def dgetFromSbox(x):
+a = 0
+b = 0
+if ord(x[0]) >= 48 and ord(x[0]) <= 57:
+a = ord(x[0]) -48
+elif ord(x[0]) >= 97 and ord(x[0]) <= 122:
+a = ord(x[0]) -87
+else:
+a = int(x[0])
+
+if ord(x[1]) >= 48 and ord(x[1]) <= 57:
+b = ord(x[1]) -48
+elif ord(x[1]) >= 97 and ord(x[1]) <= 122:
+b = ord(x[1]) -87
+else:
+b = int(x[1])
+
+
+return Sbox_inv[a][b].lower()
+
+#assign inverse s-box
+def d_3sbox(my_matrix, rows, cols):
+for i in range(cols):
+my_matrix[2][i] = dgetFromSbox(my_matrix[2][i])
+return my_matrix
